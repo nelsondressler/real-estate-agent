@@ -3,13 +3,17 @@ agents/supervisor.py
 Supervisor agent: detects user intent and extracts property addresses.
 """
 
+import os
 import json
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from state.agent_state import AgentState
 from utils.llm_client import get_llm
 
-llm = get_llm(model_type="openai", model_name="gpt-4o-mini")
+model_type = os.getenv("MODEL_TYPE", "openai")
+model_name = os.getenv("MODEL_NAME", "gpt-4o-mini")
+llm = get_llm(model_type=model_type, model_name=model_name)
+
 
 SUPERVISOR_SYSTEM = """
 You are a real estate asset management assistant router.

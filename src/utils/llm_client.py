@@ -17,27 +17,28 @@ def get_llm(
     model_name: str = "gpt-4o-mini"
 ) -> Union[ChatOpenAI, ChatGoogleGenerativeAI, ChatAnthropic]:
     """
-    Build and return a ChatAnthropic client.
+    Build and return a configured LLM client based on environment variables.
 
-    Reads ANTHROPIC_API_KEY from the environment.
-    Uses claude-3-5-haiku for low latency and cost efficiency.
+    Reads API_KEYs from the environment.
+    Uses model_type to determine which LLM class to instantiate.
+    Uses model_name to specify the exact model to use for that LLM type.
 
     Parameters
     ----------
     model_type : str
         The type of LLM to instantiate. Supported values: "openai", "google", "anthropic".
     model_name : str
-        The specific model name to use for the chosen LLM type. Ignored for "anthropic" as it defaults to "claude-3-5-haiku".
+        The specific model name to use for the chosen LLM type. E.g., "gpt-4o-mini" for OpenAI, "gemini-1.5-pro" for Google, "claude-3-5-haiku" for Anthropic.
 
     Returns
     -------
-    ChatAnthropic
-        Configured LLM client.
+    Union[ChatOpenAI, ChatGoogleGenerativeAI, ChatAnthropic]
+        An instance of the configured LLM client.
 
     Raises
     ------
     EnvironmentError
-        If ANTHROPIC_API_KEY is not set.
+        If the required API_KEY is not set.
     """
     
     if model_type == 'openai':

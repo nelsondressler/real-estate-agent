@@ -12,7 +12,9 @@ from tools.data_tools import find_property
 from utils.llm_client import get_llm
 from utils.data_loader import load_properties
 
-llm = get_llm(model_type="openai", model_name="gpt-4o-mini")
+model_type = os.getenv("MODEL_TYPE", "openai")
+model_name = os.getenv("MODEL_NAME", "gpt-4o-mini")
+llm = get_llm(model_type=model_type, model_name=model_name)
 
 synthetic = os.getenv("SYNTHETIC_DATA", "false") == "true"  # Set to False to load real data from DATA_PATH
 df = load_properties(synthetic=synthetic)

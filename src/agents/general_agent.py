@@ -3,12 +3,16 @@ agents/general_agent.py
 Handles general real estate knowledge questions and unknown requests.
 """
 
+import os
+
 from langchain_core.messages import HumanMessage
 
 from state.agent_state import AgentState
 from utils.llm_client import get_llm
 
-llm = get_llm(model_type="openai", model_name="gpt-4o-mini")
+model_type = os.getenv("MODEL_TYPE", "openai")
+model_name = os.getenv("MODEL_NAME", "gpt-4o-mini")
+llm = get_llm(model_type=model_type, model_name=model_name)
 
 
 def general_agent_node(state: AgentState) -> dict:

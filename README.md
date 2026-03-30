@@ -9,6 +9,7 @@ This project implements a prototype multi-agent system for managing real estate 
 ### 1. **Prerequisites**
 
 - Python 3.11+
+- An [LangSmith API KEY](https://smith.langchain.com/settings?_gl=1*176qkdf*_gcl_au*MTc3MTUyMzQ2OS4xNzc0NTMzMjAy*_ga*MTA0NDUxNDE5OC4xNzQ4ODkwMTUz*_ga_47WX3HKKY2*czE3NzQ5MDE4MzIkbzIxJGcxJHQxNzc0OTAxODM5JGo1MyRsMCRoMA..)
 - An [OpenAI API Key](https://platform.openai.com/settings/organization/api-keys)
 - An [Gemini API Key](https://aistudio.google.com/api-keys)
 - An [Anthropic API key](https://platform.claude.com/settings/keys)
@@ -17,7 +18,7 @@ This project implements a prototype multi-agent system for managing real estate 
 
 ```bash
 git clone https://github.com/nelsondressler/real-estate-agent.git
-cd real-estate-agent/src
+cd real-estate-agent/src/
 ```
 
 ### 3. **Create a Virtual Environment**
@@ -41,17 +42,15 @@ The main dependencies include pydantic, pandas, langchain, langgraph, openai, ge
 
 ```bash
 cp .env.example .env
-# Open .env and add your ANTHROPIC_API_KEY
+# Open .env and add your API_KEYs
 ```
 
 `.env` contents:
 ```
-DATA_PATH=../data/cortex.parquet
-LANGSMITH_TRACING=true
-LANGSMITH_API_KEY=...
-OPENAI_API_KEY=...
-GEMINI_API_KEY=...
-ANTHROPIC_API_KEY=...
+LANGSMITH_API_KEY=<your-key-here>
+OPENAI_API_KEY=<your-key-here>
+GEMINI_API_KEY=<your-key-here>
+ANTHROPIC_API_KEY=<your-key-here>
 ```
 
 ### 6. **Data Preparation:**
@@ -76,7 +75,7 @@ python main.py
 
 Start the Streamlit app to interact with the agent through the UI:
 ```bash
-streamlit run ui/app.py
+streamlit run app.py
 ```
 
 ---
@@ -164,18 +163,24 @@ real_estate_agent/
 
 ## Implementation Choices
 
-### LLM — Openai
+### LLM — Openai GPT-4o-mini
+Chosen for its low latency and cost efficiency while maintaining high accuracy for structured tasks like intent classification and address extraction.
 
 ### LLM — Gemini 2.5 Flash
 
+Also included for further tests
+
 ### LLM — Claude 3.5 Haiku
-Chosen for its low latency and cost efficiency while maintaining high accuracy for structured tasks like intent classification and address extraction.
+
+Also included for further tests
 
 ### Orchestration — LangGraph
 LangGraph's `StateGraph` provides explicit, traceable control flow between agents. Conditional edges make the routing logic transparent and easy to extend.
 
 ### Data layer — Pandas + Parquet
 The `cortex.parquet` file is loaded once into a shared DataFrame. All agents query it through pure functions in `tools/data_tools.py`, keeping data access decoupled from agent logic.
+
+It's important to mention that because of lack of some columns in the original dataset (`cortex.parquet`) such as `address` and `price`, it was generated a synthetic dataset in a Python file called `synthetic.py` to simulate the agents' tasks.
 
 ### Temperature = 0
 Set to zero on all LLM calls to ensure deterministic, reproducible results — critical for financial data tasks.
@@ -217,4 +222,4 @@ The supervisor always runs first. Its output (`intent` + `extracted_addresses`) 
 | Reliable intent classification | Strict JSON-only prompt with enumerated intent values |
 | Address extraction from free text | Delegated entirely to the LLM via structured output |
 | Keeping agents independent | Shared `AgentState` TypedDict; agents only read/write their own fields |
-| P&L with missing financial columns | `row.get("annual_income", 0)` with safe defaults |
+| Missing financial columns such as Address and Price | `if 'address' in df.columns:` or `if 'price' in row:` with safe defaults |
