@@ -1,0 +1,12 @@
+python-dotenv
+pydantic
+pandas
+google-generativeai
+google-ai-generativelanguage==0.6.15
+langchain-core
+langchain-community
+langchain-openai
+langchain-anthropic
+langchain-google-genai
+langgraph
+streamlit
