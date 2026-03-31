@@ -60,7 +60,7 @@ Ensure the file cortex.parquet (property catalog) is in the data/ directory.
 Copy `cortex.parquet` into the `data/` folder:
 
 ```bash
-cp /path/to/cortex.parquet data/cortex.parquet
+cp <original_path>/cortex.parquet ../data/cortex.parquet
 ```
 
 ### 7. **Run the Application**
