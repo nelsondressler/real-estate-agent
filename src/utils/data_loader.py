@@ -7,13 +7,14 @@ import os
 import sys
 import pandas as pd
 
-# Handle both relative imports (when used as module) and direct execution
-try:
-    from ...data.synthetic import data
-except ImportError:
-    # Add project root to path for direct execution
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
-    from data.synthetic import data
+synthetic_data = {
+    "address": ["123 Main St", "456 Oak Ave", "789 Pine Ln"],
+    "month": ["2026-M01", "2026-M02", "2026-M02"],
+    "quarter": ["2026-Q1", "2026-Q1", "2026-Q1"],
+    "year": ["2026", "2026", "2026"],
+    "price": [520000, 475000, 300000],
+    "pnl": [10000, -5000, 20000]
+}
 
 def load_properties(path: str | None = None, synthetic: bool = False) -> pd.DataFrame:
     """
@@ -48,7 +49,7 @@ def load_properties(path: str | None = None, synthetic: bool = False) -> pd.Data
         df = pd.read_parquet(path)
 
     else:
-        df = pd.DataFrame(data)
+        df = pd.DataFrame(synthetic_data)
     
     # Normalise address column for consistent matching
     if 'adress' in df.columns:
